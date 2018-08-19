@@ -1,5 +1,6 @@
 class MarkPostWorker
   include Sidekiq::Worker
+  include Sidekiq::Status::Worker
   sidekiq_options retry: false
 
   def perform(post_id, mark)

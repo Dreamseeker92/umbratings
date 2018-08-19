@@ -5,8 +5,12 @@ module Postable
 
     def create
       author = get_valid_author params['login']
-      post = validate_post( author, params)
-      render json: post, status: :ok
+      if author.kind_of?(Author)
+        post = validate_post( author, params)
+        render json: post, :status => get_status_for_post(post)
+      else
+        render json: author, status: 422
+      end
     end
 
     def best_posts
@@ -22,6 +26,10 @@ module Postable
     end
 
     protected
+
+    def get_status_for_post post
+      post.is_a?(Post) ? 'ok'.to_sym : 422.to_sym
+    end
 
     def validate_post(author,params = {})
       post = Post.new(
@@ -45,7 +53,7 @@ module Postable
         obj.save!
         obj
       else
-        render status: 422, json: validator.errors.messages
+        validator.errors.messages
       end
     end
 

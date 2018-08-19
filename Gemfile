@@ -9,6 +9,7 @@ gem 'puma', '~> 3.11'
 gem 'rails', '~> 5.2.0'
 gem 'redis', '~> 4.0'
 gem 'sidekiq'
+gem 'sidekiq-status'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
