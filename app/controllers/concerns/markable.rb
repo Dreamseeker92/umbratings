@@ -3,13 +3,11 @@ module Markable
 
   included do
     def create
-      if params['mark'].present?
-        jid = MarkPostWorker.perform_async(params['post_id'], params['mark'].to_i)
-        until check_if_complete(jid) == :complete
-          sleep 0.1
-        end
-        render json: { average_rating: Post.find(params[:post_id]).average_rating},
-               status: :ok
+      mark = params['mark'].to_i
+      if mark.present? && validate_mark(mark)
+        post = Post.find(params[:post_id])
+        MarkPostWorker.perform_async(params['post_id'], mark)
+        render json: calc_new_avg( post, mark), status: :ok
       else
         render status: 422
       end
@@ -17,8 +15,14 @@ module Markable
 
     protected
 
-    def check_if_complete jid
-      Sidekiq::Status::status jid
+    def validate_mark mark
+      RatingMarkValidator.new(Rating.new(mark: mark)).valid?
+    end
+
+    def calc_new_avg post, mark
+      avg = post.average_rating.presence || 0
+      r_count = post.ratings_count
+      { new_average_rating: (avg * r_count + mark) / (r_count + 1) }
     end
   end
 end

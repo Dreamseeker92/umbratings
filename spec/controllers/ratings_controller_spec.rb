@@ -15,8 +15,8 @@ RSpec.describe RatingsController, type: :controller do
         expect(response).to be_success
       end
 
-      xit 'should return new average' do
-        res = JSON.parse(response.body)
+      it 'should return new average' do
+        expect(JSON.parse(response.body)).to eq('new_average_rating' => 4)
       end
 
     end
