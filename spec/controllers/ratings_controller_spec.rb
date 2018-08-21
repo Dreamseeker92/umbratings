@@ -19,6 +19,7 @@ RSpec.describe RatingsController, type: :controller do
         expect(JSON.parse(response.body)).to eq('new_average_rating' => 4)
       end
 
+
     end
 
     context 'with invalid params' do
