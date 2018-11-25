@@ -21,9 +21,10 @@ module Umbratings
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
-    config.autoload_paths << File.join(Rails.root, 'app', 'models', 'validators')
     config.autoload_paths << File.join(Rails.root, 'app', 'models', 'queries')
-    config.autoload_paths << File.join(Rails.root, 'app', 'controllers', 'concerns')
+    config.autoload_paths << File.join(Rails.root, 'app', 'controllers', 'services')
+    config.autoload_paths << File.join(Rails.root, 'app', 'controllers', 'transactions')
+    config.autoload_paths << File.join(Rails.root, 'app', 'controllers', 'validation')
 
 
 

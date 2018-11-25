@@ -13,5 +13,12 @@ FactoryBot.define do
     end
 
     factory :empty_post, traits: [:empty]
+    factory :post_with_ratings do
+      after :create do |p|
+        10.times { Rating.create(post: p, mark: Array(1..5).sample) }
+      end
+    end
   end
+
+
 end

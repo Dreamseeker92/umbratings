@@ -14,7 +14,7 @@ RSpec.describe PostsController, type: :controller do
       end
 
       it 'should return 200' do
-        expect(response).to be_success
+        expect(response).to be_successful
       end
 
       it 'should return post with valid params' do
@@ -47,23 +47,30 @@ RSpec.describe PostsController, type: :controller do
       before do
         sample_arr = *(1..5).map(&:to_f)
         @posts = []
-        10.times do
-         post = FactoryBot.create(:post, average_rating: sample_arr.sample)
-        ensure
-          @posts << post
-        end
-      end
 
-      it 'should return oly posts for a given rating' do
-        average_for_two = @posts.select {|p| p.average_rating == 2.0 }
-        get :best_posts, params: { rating: 2 }
-        expect(JSON.parse(response.body).size).to eq(average_for_two.count)
-        expect(JSON.parse(response.body)).to eq(average_for_two.pluck(:title, :body))
+        100.times do
+          post = FactoryBot.create(:post_with_ratings, average_rating: sample_arr.sample)
+          ensure
+          @posts << post
+          end
       end
 
       it 'should respond with 200' do
-        post :best_posts, params: { rating: 3}
-        expect(response).to be_success
+        get :best_posts, params: { length: 3}
+        expect(response).to be_successful
+      end
+
+      it 'should respond with a give length' do
+        get :best_posts, params: { length: 3}
+        expect(JSON.parse(response.body)).to_not be_empty
+        expect(JSON.parse(response.body).size).to eq(3)
+      end
+
+      it 'should respond with 422 if no length given' do
+        get :best_posts, params: {length: ''}
+        expect(response).to_not be_successful
+        expect(response.status).to eq(422)
+        expect(response.message).to eq('Unprocessable Entity')
       end
     end
   end

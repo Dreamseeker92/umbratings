@@ -2,18 +2,15 @@ module Queries
 
   class PostQueries
 
-    attr_reader :rating, :length
-
-    def initialize(rating, length)
-      @rating = rating
-      @length = length
-    end
-
-    def top_posts
-      Post.where(average_rating: rating)
-      .order(ratings_count: :desc)
-      .first(length)
-      .pluck(:title, :body)
+    class << self
+      def top_posts(length)
+      <<~SQL
+       select posts.title, posts.body from posts
+       where posts.average_rating = (select p.average_rating from posts p 
+       inner join ratings r on p.id = r.post_id group by p.average_rating
+       having count(r.*) > 1 limit 1) limit #{length}
+      SQL
+      end
     end
   end
 end

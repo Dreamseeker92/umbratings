@@ -12,13 +12,12 @@ RSpec.describe RatingsController, type: :controller do
       end
 
       it 'returns status code 200' do
-        expect(response).to be_success
+        expect(response).to be_successful
       end
 
       it 'should return new average' do
         expect(JSON.parse(response.body)).to eq('new_average_rating' => 4)
       end
-
 
     end
 

@@ -1,3 +1,5 @@
 class RatingsController < ApplicationController
-  include Markable
+  def create
+    MarkPostService.new(self).create
+  end
 end

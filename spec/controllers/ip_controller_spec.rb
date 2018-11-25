@@ -30,12 +30,12 @@ RSpec.describe IpController, type: :controller do
 
       third_ip_list = res.detect { |r| r['author_ip'] == @ip_3 }
       expect(third_ip_list).to be_nil
-      expect(first_ip_list['array_agg'].sort).to eq(@ip_1_login_arr.sort)
-      expect(second_ip_list['array_agg'].sort).to eq(@ip_2_login_arr.sort)
+      expect(first_ip_list['array_agg'].sort).to eq(@ip_1_login_arr.uniq.sort)
+      expect(second_ip_list['array_agg'].sort).to eq(@ip_2_login_arr.uniq.sort)
     end
 
     it 'should return 200' do
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 
